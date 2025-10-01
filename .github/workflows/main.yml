@@ -1,0 +1,55 @@
+name: Selenium Parse
+
+on:
+  schedule:
+    - cron: '0 7 * * *'   # 7:00 UTC
+    - cron: '0 15 * * *'  # 15:00 UTC
+    - cron: '0 22 * * *'  # 22:00 UTC
+  workflow_dispatch:
+
+jobs:
+  selenium_job:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+      with:
+        persist-credentials: false
+        fetch-depth: 0
+
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.10
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install selenium webdriver-manager beautifulsoup4 python-telegram-bot
+
+    - name: Install Google Chrome
+      run: |
+        wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+        sudo apt install -y ./google-chrome-stable_current_amd64.deb
+
+    - name: Run selenium_parse.py
+      env:
+        BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+        CHAT_ID: ${{ secrets.CHAT_ID }}
+      run: python selenium_parse.py
+
+    - name: Commit and push seen.txt if updated
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+
+        if git diff --quiet; then
+          echo "No changes to commit"
+        else
+          git add seen.txt
+          git commit -m "Update seen.txt after parsing"
+          git push origin HEAD:${{ github.ref_name }}
+        fi
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
