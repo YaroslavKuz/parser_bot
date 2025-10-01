@@ -65,6 +65,7 @@ jobs:
         else
           git add seen.txt
           git commit -m "Update seen.txt after parsing"
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git
           git push origin HEAD:${{ github.ref_name }}
         fi
       env:
