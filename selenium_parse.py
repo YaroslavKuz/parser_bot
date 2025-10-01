@@ -38,7 +38,14 @@ def save_seen_coin(coin_id, name):
 async def check_new_coins():
     print("🔍 Перевіряємо сайт за допомогою Selenium...")
 
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+    from selenium.webdriver.chrome.options import Options  # додай сюди
+
+    options = Options()
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     driver.get(URL)
 
     try:
