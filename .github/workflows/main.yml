@@ -2,8 +2,8 @@ name: Selenium Parse
 
 on:
   push:
-   branches:
-     - master
+    branches:
+      - master
   schedule:
     - cron: '0 7 * * *'   # 7:00 UTC
     - cron: '0 15 * * *'  # 15:00 UTC
@@ -21,7 +21,7 @@ jobs:
         persist-credentials: false
         fetch-depth: 0
 
-    - name: Set up Python 3.10
+    - name: Set up Python 3.11
       uses: actions/setup-python@v4
       with:
         python-version: 3.11
@@ -41,6 +41,19 @@ jobs:
         BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
         CHAT_ID: ${{ secrets.CHAT_ID }}
       run: python selenium_parse.py
+
+    # Додаємо діагностичні кроки тут
+    - name: List current directory files
+      run: ls -la
+
+    - name: Show seen.txt content
+      run: cat seen.txt || echo "seen.txt not found"
+
+    - name: Show git status
+      run: git status
+
+    - name: Show git diff
+      run: git diff || echo "No changes in git diff"
 
     - name: Commit and push seen.txt if updated
       run: |
