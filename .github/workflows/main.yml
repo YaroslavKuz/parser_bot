@@ -2,9 +2,9 @@ name: Selenium Parse
 
 on:
   schedule:
-    - cron: '0 7 * * *'   # 7:00 UTC
-    - cron: '0 15 * * *'  # 15:00 UTC
-    - cron: '0 22 * * *'  # 22:00 UTC
+    - cron: '0 6 * * *'   # 6:00 UTC
+    - cron: '0 14 * * *'  # 14:00 UTC
+    - cron: '0 21 * * *'  # 21:00 UTC
   workflow_dispatch:
 
 jobs:
